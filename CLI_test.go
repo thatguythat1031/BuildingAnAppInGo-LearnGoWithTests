@@ -1,13 +1,32 @@
-package poker
+package poker_test
 
-import "testing"
+import (
+	"strings"
+	"testing"
+
+	poker "github.com/thatguythat1031/learnGo/buildinganappingo/BuildingAnAppInGo-LearnGoWithTests"
+)
 
 func TestCLI(t *testing.T) {
-	playerStore := &StubPlayerStore{}
-	cli := &CLI{playerStore}
-	cli.PlayPoker()
 
-	if len(playerStore.winCalls) != 1 {
-		t.Fatal("expected a win call but didn't get any")
-	}
+	t.Run("record chris win from user input", func(t *testing.T) {
+		in := strings.NewReader("Chris wins\n")
+		playerStore := &poker.StubPlayerStore{}
+
+		cli := poker.NewCLI(playerStore, in)
+		cli.PlayPoker()
+
+		poker.AssertPlayerWin(t, playerStore, "Chris")
+	})
+
+	t.Run("record cleo win from user input", func(t *testing.T) {
+		in := strings.NewReader("Cleo wins\n")
+		playerStore := &poker.StubPlayerStore{}
+
+		cli := poker.NewCLI(playerStore, in)
+		cli.PlayPoker()
+
+		poker.AssertPlayerWin(t, playerStore, "Cleo")
+	})
+
 }
